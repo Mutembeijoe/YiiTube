@@ -1,12 +1,15 @@
 <?php
 
 /* @var $this \yii\web\View */
+
 /* @var $content string */
 
 use backend\assets\AppAsset;
 use yii\helpers\Html;
+use common\widgets\Alert;
 
 AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -19,17 +22,10 @@ AppAsset::register($this);
     <title><?= Html::encode($this->title) ?></title>
     <?php $this->head() ?>
 </head>
-<body class="blank">
+<body>
 <?php $this->beginBody() ?>
 
-<div class="container">
-
-    <div class="wrap">
-        <?= $content ?>
-    </div>
-
-</div>
-
+<?= $content ?>
 <?php $this->endBody() ?>
 </body>
 </html>
