@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
+use yii\helpers\FileHelper;
 
 /**
  * This is the model class for table "{{%video}}".
@@ -22,12 +25,29 @@ use Yii;
  */
 class Video extends \yii\db\ActiveRecord
 {
+    /** @var \yii\web\UploadedFile */
+    public $video;
+
+    /** @var \yii\web\UploadedFile */
+    public $thumbnail;
+
     /**
      * {@inheritdoc}
      */
     public static function tableName()
     {
         return '{{%video}}';
+    }
+
+    public function behaviors(): array
+    {
+        return [
+            TimestampBehavior::class,
+            [
+                'class' => BlameableBehavior::class,
+                'updatedByAttribute' => false,
+            ]
+        ];
     }
 
     /**
@@ -42,6 +62,8 @@ class Video extends \yii\db\ActiveRecord
             [['video_id'], 'string', 'max' => 12],
             [['title', 'tags', 'video_name'], 'string', 'max' => 512],
             [['video_id'], 'unique'],
+            [['video'], 'file', 'extensions' => 'mp4'],
+            [['thumbnail'], 'image', 'minWidth' => 1280],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
         ];
     }
@@ -61,6 +83,7 @@ class Video extends \yii\db\ActiveRecord
             'tags' => 'Tags',
             'status' => 'Status',
             'has_thumbnail' => 'Has Thumbnail',
+            'thumbnail' => 'Thumbnail',
             'video_name' => 'Video Name',
         ];
     }
@@ -82,5 +105,33 @@ class Video extends \yii\db\ActiveRecord
     public static function find()
     {
         return new \common\models\query\VideoQuery(get_called_class());
+    }
+
+    public function save($runValidation = true, $attributeNames = null)
+    {
+
+        $isCreate = $this->isNewRecord;
+
+        if ($isCreate) {
+            $this->video_id = Yii::$app->security->generateRandomString(8);
+            $this->video_name = $this->video->name;
+            $this->title = $this->video->name;
+        }
+        $saved = parent::save($runValidation, $attributeNames);
+
+        if (!$saved) {
+            return false;
+        }
+
+        $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4');
+
+        if (!is_dir(dirname($videoPath))) {
+            FileHelper::createDirectory(dirname($videoPath));
+        }
+
+        $this->video->saveAs($videoPath);
+
+        return true;
+
     }
 }

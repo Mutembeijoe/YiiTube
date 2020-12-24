@@ -17,3 +17,31 @@ aside .nav-pills .nav-link.active{
     border-left: 4px solid #b90000;
 }
 
+
+/* Upload Video Page */
+
+.upload-icon{
+    background-color: #EBEBEB;
+    height:200px;
+    width:200px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 50px;
+}
+
+.upload-button{
+    position: relative;
+}
+
+.upload-button input{
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
