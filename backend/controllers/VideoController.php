@@ -42,6 +42,7 @@ class VideoController extends Controller
 
         return $this->render('index', [
             'dataProvider' => $dataProvider,
+//            'model' =>
         ]);
     }
 

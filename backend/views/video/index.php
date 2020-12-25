@@ -1,13 +1,18 @@
 <?php
 
+
 use yii\helpers\Html;
 use yii\grid\GridView;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $model common\models\Video */
+
 
 $this->title = 'Videos';
 $this->params['breadcrumbs'][] = $this->title;
+
+
 ?>
 <div class="video-index">
 
@@ -23,17 +28,21 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
 
-            'video_id',
-            'title',
-            'description:ntext',
-            'created_by',
-            'created_at',
-            //'updated_at',
-            //'tags',
-            //'status',
-            //'has_thumbnail',
-            //'video_name',
+            [
+                'attribute' => 'Video',
+                'content' => function ($model) {
+                    return $this->render('video_display', ['model'=> $model]);
+                }
+            ],
+            'created_at:datetime',
+            'updated_at:datetime',
+            [
+                'attribute' => 'status',
+                'content' => function ($model) {
+                    return $model->getStatusAttributeLabels()[$model->status];
+                },
 
+            ],
             ['class' => 'yii\grid\ActionColumn'],
         ],
     ]); ?>
