@@ -2,10 +2,12 @@
 
 namespace common\models;
 
+use Imagine\Image\Box;
 use Yii;
 use yii\behaviors\BlameableBehavior;
 use yii\behaviors\TimestampBehavior;
 use yii\helpers\FileHelper;
+use yii\imagine\Image;
 
 /**
  * This is the model class for table "{{%video}}".
@@ -142,13 +144,14 @@ class Video extends \yii\db\ActiveRecord
         }
 
         if ($this->thumbnail) {
-
             $thumbPath = Yii::getAlias('@frontend/web/storage/thumbs/' . $this->video_id . '.jpg');
 
             if (!is_dir(dirname($thumbPath))) {
                 FileHelper::createDirectory(dirname($thumbPath));
             }
             $this->thumbnail->saveAs($thumbPath);
+
+            Image::getImagine()->open($thumbPath)->thumbnail(new Box(1280, 1280))->save();
         }
 
         return true;
@@ -165,7 +168,8 @@ class Video extends \yii\db\ActiveRecord
         return Yii::$app->params['frontendUrl'] . 'storage/thumbs/' . $this->video_id . '.jpg';
     }
 
-    public function getStatusAttributeLabels(): array{
+    public function getStatusAttributeLabels(): array
+    {
         return [
             self::STATUS_UNLISTED => 'Unlisted',
             self::STATUS_PUBLISHED => 'Published',
