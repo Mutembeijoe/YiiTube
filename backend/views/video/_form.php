@@ -1,36 +1,62 @@
 <?php
 
+use backend\assets\TagsInputAsset;
 use yii\helpers\Html;
-use yii\widgets\ActiveForm;
+use yii\bootstrap4\ActiveForm;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Video */
-/* @var $form yii\widgets\ActiveForm */
+/* @var $form yii\bootstrap4\ActiveForm */
+
+TagsInputAsset::register($this);
 ?>
 
 <div class="video-form">
 
-    <?php $form = ActiveForm::begin(); ?>
+    <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]); ?>
+    <div class="row">
+        <div class="col-md-8">
+            <?= $form->errorSummary($model) ?>
 
-    <?= $form->field($model, 'video_id')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+            <?= $form->field($model, 'tags', ['inputOptions' => ['data-role'=>"tagsinput"]])->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'title')->textInput(['maxlength' => true]) ?>
+            <div class="form-group">
+                <label><?= $model->getAttributeLabel('thumbnail') ?></label>
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="thumbnail" name="thumbnail">
+                    <label class="custom-file-label" for="thumbnail">Choose file</label>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
+        </div>
+        <div class="col-md-4">
+            <div class="embed-responsive embed-responsive-16by9 mb-3">
+                <video class="embed-responsive-item" poster="<?php echo $model->getThumbnailLink() ?>"
+                       src="<?php echo $model->getVideoLink() ?>"
+                       controls>
+                </video>
+            </div>
 
-    <?= $form->field($model, 'created_by')->textInput() ?>
+            <div class="mb-3">
+                <div class="text-muted">Video Link</div>
+                <div class="">
+                    <a href="<?php echo $model->getVideoLink() ?>">Open Video</a>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'created_at')->textInput() ?>
+            <div class="mb-3">
+                <div class="text-muted">Video Name</div>
+                <div>
+                    <?php echo $model->video_name ?>
+                </div>
+            </div>
 
-    <?= $form->field($model, 'updated_at')->textInput() ?>
 
-    <?= $form->field($model, 'tags')->textInput(['maxlength' => true]) ?>
-
-    <?= $form->field($model, 'status')->textInput() ?>
-
-    <?= $form->field($model, 'has_thumbnail')->textInput() ?>
-
-    <?= $form->field($model, 'video_name')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'status')->dropdownList($model->getStatusAttributeLabels()) ?>
+        </div>
+    </div>
 
     <div class="form-group">
         <?= Html::submitButton('Save', ['class' => 'btn btn-success']) ?>
@@ -39,3 +65,4 @@ use yii\widgets\ActiveForm;
     <?php ActiveForm::end(); ?>
 
 </div>
+

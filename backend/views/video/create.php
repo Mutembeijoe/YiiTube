@@ -23,12 +23,12 @@ $this->params['breadcrumbs'][] = $this->title;
             <p class="text-muted"> Your videos will be private until you publish them.</p>
         </div>
         <?php $form = ActiveForm::begin(['options' => ['enctype' => 'multipart/form-data']]) ?>
-        <?= $form->errorSummary($model)?>
+        <?= $form->errorSummary($model) ?>
         <button class="btn btn-primary upload-button">
             Select File
             <input type="file" name="video" id="videoFile">
         </button>
-        <?php ActiveForm::end()?>
+        <?php ActiveForm::end() ?>
     </div>
 
 </div>

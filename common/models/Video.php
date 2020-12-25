@@ -25,6 +25,9 @@ use yii\helpers\FileHelper;
  */
 class Video extends \yii\db\ActiveRecord
 {
+    private const STATUS_UNLISTED = 0;
+    private const STATUS_PUBLISHED = 1;
+
     /** @var \yii\web\UploadedFile */
     public $video;
 
@@ -62,6 +65,8 @@ class Video extends \yii\db\ActiveRecord
             [['video_id'], 'string', 'max' => 12],
             [['title', 'tags', 'video_name'], 'string', 'max' => 512],
             [['video_id'], 'unique'],
+            [['has_thumbnail'], 'default', 'value' => 0],
+            [['status'], 'default', 'value' => self::STATUS_UNLISTED],
             [['video'], 'file', 'extensions' => 'mp4'],
             [['thumbnail'], 'image', 'minWidth' => 1280],
             [['created_by'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['created_by' => 'id']],
@@ -117,21 +122,53 @@ class Video extends \yii\db\ActiveRecord
             $this->video_name = $this->video->name;
             $this->title = $this->video->name;
         }
+
+        if ($this->thumbnail) {
+            $this->has_thumbnail = 1;
+        }
         $saved = parent::save($runValidation, $attributeNames);
 
         if (!$saved) {
             return false;
         }
 
-        $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4');
+        if ($isCreate) {
+            $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4');
 
-        if (!is_dir(dirname($videoPath))) {
-            FileHelper::createDirectory(dirname($videoPath));
+            if (!is_dir(dirname($videoPath))) {
+                FileHelper::createDirectory(dirname($videoPath));
+            }
+            $this->video->saveAs($videoPath);
         }
 
-        $this->video->saveAs($videoPath);
+        if ($this->thumbnail) {
+
+            $thumbPath = Yii::getAlias('@frontend/web/storage/thumbs/' . $this->video_id . '.jpg');
+
+            if (!is_dir(dirname($thumbPath))) {
+                FileHelper::createDirectory(dirname($thumbPath));
+            }
+            $this->thumbnail->saveAs($thumbPath);
+        }
 
         return true;
+    }
 
+
+    public function getVideoLink(): string
+    {
+        return Yii::$app->params['frontendUrl'] . 'storage/videos/' . $this->video_id . '.mp4';
+    }
+
+    public function getThumbnailLink(): string
+    {
+        return Yii::$app->params['frontendUrl'] . 'storage/thumbs/' . $this->video_id . '.jpg';
+    }
+
+    public function getStatusAttributeLabels(): array{
+        return [
+            self::STATUS_UNLISTED => 'Unlisted',
+            self::STATUS_PUBLISHED => 'Published',
+        ];
     }
 }
