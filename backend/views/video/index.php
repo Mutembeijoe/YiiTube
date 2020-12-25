@@ -31,7 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'attribute' => 'Video',
                 'content' => function ($model) {
-                    return $this->render('video_display', ['model'=> $model]);
+                    return $this->render('video_display', ['model' => $model]);
                 }
             ],
             'created_at:datetime',
@@ -43,7 +43,17 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
 
             ],
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn',
+                'buttons' => [
+                    'delete' => function ($url) {
+                        return HTML::a('Delete', $url, [
+                            'data-method' => 'post',
+                            'data-confirm' => 'You are about to delete a video',
+                        ]);
+                    }
+                ]
+            ],
         ],
     ]); ?>
 
