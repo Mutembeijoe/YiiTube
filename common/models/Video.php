@@ -188,7 +188,27 @@ class Video extends \yii\db\ActiveRecord
 
     }
 
-    public function getViews(){
+    public function getViews()
+    {
         return $this->hasMany(VideoView::class, ["video_id" => 'video_id']);
+    }
+
+    public function isLikedBy($userId)
+    {
+        return VideoLikes::find()->userIdVideoId($userId, $this->video_id)->liked()->one();
+    }
+
+    public function isDislikedBy($userId)
+    {
+        return VideoLikes::find()->userIdVideoId($userId, $this->video_id)->disliked()->one();
+    }
+
+    public function getLikes()
+    {
+        return $this->hasMany(VideoLikes::class, ["video_id" => 'video_id'])->liked();
+    }
+    public function getDislikes()
+    {
+        return $this->hasMany(VideoLikes::class, ["video_id" => 'video_id'])->disliked();
     }
 }
