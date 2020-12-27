@@ -15,7 +15,7 @@ if (Yii::$app->user->isGuest) {
     $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
     $menuItems[] = ['label' => 'SignUp', 'url' => ['/site/signup']];
 } else {
-    $menuItems[] = ['label' => 'Logout', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']];
+    $menuItems[] = ['label' => 'Logout('.YII::$app->user->identity->username.')', 'url' => ['/site/logout'], 'linkOptions' => ['data-method' => 'post']];
 }
 echo Nav::widget([
     'options' => ['class' => 'navbar-nav ml-auto'],
