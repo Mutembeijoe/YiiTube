@@ -11,6 +11,11 @@ use yii\helpers\Url;
         <i class="fas fa-thumbs-up"></i>
         1000
     </a>
-    <button class="btn btn-outline-secondary"><i class="fas fa-thumbs-down"></i>40</button>
+
+    <a href="<?php echo Url::to(['/video/dislike', 'id' => $model->video_id]) ?>"
+       class="btn btn-outline-primary" data-pjax="1" data-method="POST">
+        <i class="fas fa-thumbs-down"></i>
+        1000
+    </a>
 </div>
 

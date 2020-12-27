@@ -85,4 +85,5 @@ class VideoLikes extends \yii\db\ActiveRecord
     {
         return new \common\models\query\VideoLikesQuery(get_called_class());
     }
+
 }

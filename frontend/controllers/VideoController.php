@@ -67,12 +67,35 @@ class VideoController extends Controller
     {
 
         $video = $this->findVideo($id);
-        $videoLike = new VideoLikes();
-        $videoLike->video_id = $id;
-        $videoLike->created_at = time();
-        $videoLike->user_id = \Yii::$app->user->id;
-        $videoLike->type = VideoLikes::TYPE_LIKE;
-        $videoLike->save();
+        $userId = \Yii::$app->user->id;
+
+        $videoLikeDislike = VideoLikes::find()->userIdVideoId($userId, $id)->one();
+        if(!$videoLikeDislike){
+            $this->saveVideoLikeDislike($userId, $id,VideoLikes::TYPE_LIKE);
+        }else if($videoLikeDislike->type == VideoLikes::TYPE_LIKE){
+            $videoLikeDislike->delete();
+        }else{
+            $videoLikeDislike->delete();
+            $this->saveVideoLikeDislike($userId, $id,VideoLikes::TYPE_LIKE);
+        }
+        return $this->renderAjax('_buttons', ["model" => $video]);
+    }
+
+    public function actionDislike($id): string
+    {
+
+        $video = $this->findVideo($id);
+        $userId = \Yii::$app->user->id;
+
+        $videoLikeDislike = VideoLikes::find()->userIdVideoId($userId, $id)->one();
+        if(!$videoLikeDislike){
+            $this->saveVideoLikeDislike($userId, $id,VideoLikes::TYPE_DISLIKE);
+        }else if($videoLikeDislike->type == VideoLikes::TYPE_DISLIKE){
+            $videoLikeDislike->delete();
+        }else{
+            $videoLikeDislike->delete();
+            $this->saveVideoLikeDislike($userId, $id,VideoLikes::TYPE_DISLIKE);
+        }
         return $this->renderAjax('_buttons', ["model" => $video]);
     }
 
@@ -86,6 +109,15 @@ class VideoController extends Controller
         }
 
         return $video;
+    }
+
+    protected function saveVideoLikeDislike($userId, $videoId, $type){
+        $videoLike = new VideoLikes();
+        $videoLike->video_id = $videoId;
+        $videoLike->created_at = time();
+        $videoLike->user_id =$userId ;
+        $videoLike->type = $type;
+        $videoLike->save();
     }
 
 }
