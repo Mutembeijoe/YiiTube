@@ -27,8 +27,8 @@ use yii\imagine\Image;
  */
 class Video extends \yii\db\ActiveRecord
 {
-    private const STATUS_UNLISTED = 0;
-    private const STATUS_PUBLISHED = 1;
+    public const STATUS_UNLISTED = 0;
+    public const STATUS_PUBLISHED = 1;
 
     /** @var \yii\web\UploadedFile */
     public $video;
@@ -182,6 +182,9 @@ class Video extends \yii\db\ActiveRecord
         $videoPath = Yii::getAlias('@frontend/web/storage/videos/' . $this->video_id . '.mp4');
         $thumbPath = Yii::getAlias('@frontend/web/storage/thumbs/' . $this->video_id . '.jpg');
         unlink($videoPath);
-        unlink($thumbPath);
+        if (file_exists($thumbPath)) {
+            unlink($thumbPath);
+        }
+
     }
 }
