@@ -16,6 +16,6 @@ use yii\helpers\Url;
     <div class="card-body p-2">
         <h6 class="card-title m-0"><?= $model->title ?></h6>
         <p class="card-text text-muted m-0"><?= $model->createdBy->username ?></p>
-        <p class="card-text text-muted m-0"><?= '1000 views . ' . Yii::$app->formatter->asRelativeTime($model->created_at) ?></p>
+        <p class="card-text text-muted m-0"><?= $model->getViews()->count(). ' views . ' . Yii::$app->formatter->asRelativeTime($model->created_at) ?></p>
     </div>
 </div>

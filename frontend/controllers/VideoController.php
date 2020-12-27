@@ -5,6 +5,7 @@ namespace frontend\controllers;
 
 
 use common\models\Video;
+use common\models\VideoView;
 use yii\data\ActiveDataProvider;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -30,6 +31,13 @@ class VideoController extends Controller
         if (!$video) {
             throw new NotFoundHttpException('Video Not Found');
         }
+
+        $videoView = new VideoView();
+        $videoView->video_id = $id;
+        $videoView->created_at = time();
+        $videoView->user_id = \Yii::$app->user->id;
+        $videoView->save();
+
         return $this->render('view', ['model' => $video]);
     }
 

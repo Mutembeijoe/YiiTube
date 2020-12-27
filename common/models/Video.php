@@ -187,4 +187,8 @@ class Video extends \yii\db\ActiveRecord
         }
 
     }
+
+    public function getViews(){
+        return $this->hasMany(VideoView::class, ["video_id" => 'video_id']);
+    }
 }

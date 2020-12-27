@@ -13,7 +13,7 @@
         </div>
         <h6 class="mt-3"><?= $model->title ?></h6>
         <div class="d-flex justify-content-between">
-            <div> 10000 views . <?php echo YII::$app->formatter->asDate($model->created_at) ?></div>
+            <div> <?php echo $model->getViews()->count()?> views . <?php echo YII::$app->formatter->asDate($model->created_at) ?></div>
             <div>
                 <button class="btn btn-outline-primary"><i class="fas fa-thumbs-up"></i> 1000</button>
                 <button class="btn btn-outline-secondary"><i class="fas fa-thumbs-down"></i>40</button>
