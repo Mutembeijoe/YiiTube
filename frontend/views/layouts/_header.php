@@ -23,7 +23,10 @@ if (Yii::$app->user->isGuest) {
 ?>
 
     <form class="form-inline my-2 my-lg-0" action="<?php echo Url::to(['/video/search'])?>">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="keyword">
+        <input class="form-control mr-sm-2"
+               type="search" placeholder="Search"
+               aria-label="Search"
+               name="keyword" value="<?php echo Yii::$app->request->get('keyword')?>">
         <button class="btn btn-outline-success my-2 my-sm-0">Search</button>
     </form>
 

@@ -1,5 +1,6 @@
 <?php
 /** @var $model \common\models\Video */
+/** @var $similarVideos \common\models\Video[] */
 
 /** @var $this \yii\web\View */
 
@@ -30,5 +31,22 @@ use yii\widgets\Pjax;
             <p class="mt-2"> <?php echo Html::encode($model->description) ?> </p>
         </div>
     </div>
-    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <?php foreach ($similarVideos as $similarVideo): ?>
+            <div class="media mb-3">
+                <div class="embed-responsive embed-responsive-16by9 mr-2" style="width: 120px">
+                    <video class="embed-responsive-item" poster="<?php echo $similarVideo->getThumbnailLink() ?>"
+                           src="<?php echo $similarVideo->getVideoLink() ?>"
+                    >
+                    </video>
+                </div>
+                <div class="media-body">
+                    <h6 class="mt-0"><?= $similarVideo->title ?></h6>
+                    <div class="text-muted">
+                        <p class="mt-0"> <?php echo \common\helpers\Html::channelLink($similarVideo->createdBy->username)  . ' 🔸 '. Yii::$app->formatter->asRelativeTime($similarVideo->created_at) ?> </p>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach ?>
+    </div>
 </div>

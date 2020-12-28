@@ -60,7 +60,9 @@ class VideoController extends Controller
         $videoView->user_id = \Yii::$app->user->id;
         $videoView->save();
 
-        return $this->render('view', ['model' => $video]);
+        $similarVideos = Video::find()->published()->byKeyword($video->title)->andWhere(['NOT', ["video_id" => $id]])->all();
+
+        return $this->render('view', ['model' => $video, 'similarVideos' => $similarVideos]);
     }
 
     public function actionLike($id): string
@@ -100,9 +102,16 @@ class VideoController extends Controller
     }
 
     public function actionSearch($keyword):string{
+        $query =  Video::find()->published()->latest();
+
+        if($keyword){
+            $query->byKeyword($keyword);
+        }
+
         $dataProvider = new ActiveDataProvider([
-            'query' => Video::find()->published()->latest()->byKeyWord($keyword),
+            'query' => $query,
         ]);
+
 
         return $this->render('search', ['dataProvider' => $dataProvider]);
     }
