@@ -6,6 +6,8 @@ namespace frontend\controllers;
 
 use common\models\Subscriber;
 use common\models\User;
+use common\models\Video;
+use yii\data\ActiveDataProvider;
 use yii\web\NotFoundHttpException;
 
 class ChannelController extends \yii\web\Controller
@@ -14,10 +16,15 @@ class ChannelController extends \yii\web\Controller
     public function actionView($username): string
     {
         $channel = $this->findChannel($username);
-        return $this->render('view', ['channel' => $channel]);
+        $dataProvider = new ActiveDataProvider(
+            [
+                'query' => Video::find()->creator($channel->id)->published(),
+            ]
+        );
+        return $this->render('view', ['channel' => $channel, 'dataProvider' => $dataProvider]);
     }
 
-    public function actionSubscribe($username)
+    public function actionSubscribe($username): string
     {
         $channel = $this->findChannel($username);
         $userId = \Yii::$app->user->id;
@@ -36,7 +43,7 @@ class ChannelController extends \yii\web\Controller
         return $this->renderAjax('_subscribe', ["channel" => $channel]);
     }
 
-    protected function findChannel($username)
+    protected function findChannel($username): User
     {
         $channel = User::findByUsername($username);
         if (!$channel) {

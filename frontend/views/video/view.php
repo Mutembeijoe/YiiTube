@@ -26,7 +26,7 @@ use yii\widgets\Pjax;
             <?php Pjax::end() ?>
         </div>
         <div>
-            <?php echo Html::a($model->createdBy->username, ['/channel/view', 'username' => $model->createdBy->username]) ?>
+            <?php echo \common\helpers\Html::channelLink($model->createdBy->username) ?>
             <p class="mt-2"> <?php echo Html::encode($model->description) ?> </p>
         </div>
     </div>

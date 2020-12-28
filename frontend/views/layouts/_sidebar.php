@@ -7,7 +7,7 @@ use yii\bootstrap4\Nav;
     'items' => [
         [
             'label' => 'Dashboard',
-            'url' => ['site/index'],
+            'url' => ['video/index'],
         ],
         [
             'label' => 'History',
