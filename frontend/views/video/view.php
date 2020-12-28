@@ -1,7 +1,9 @@
 <?php
 /** @var $model \common\models\Video */
+
 /** @var $this \yii\web\View */
 
+use yii\helpers\Html;
 use yii\widgets\Pjax;
 
 ?>
@@ -22,6 +24,10 @@ use yii\widgets\Pjax;
             <?php Pjax::begin() ?>
             <?= $this->render('_buttons', ['model' => $model]); ?>
             <?php Pjax::end() ?>
+        </div>
+        <div>
+            <?php echo Html::a($model->createdBy->username, ['/channel/view', 'username' => $model->createdBy->username]) ?>
+            <p class="mt-2"> <?php echo Html::encode($model->description) ?> </p>
         </div>
     </div>
     <div class="col-md-4"></div>
