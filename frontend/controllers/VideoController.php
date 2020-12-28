@@ -99,6 +99,14 @@ class VideoController extends Controller
         return $this->renderAjax('_buttons', ["model" => $video]);
     }
 
+    public function actionSearch($keyword):string{
+        $dataProvider = new ActiveDataProvider([
+            'query' => Video::find()->published()->latest()->byKeyWord($keyword),
+        ]);
+
+        return $this->render('search', ['dataProvider' => $dataProvider]);
+    }
+
 
     protected function findVideo($id): Video
     {
