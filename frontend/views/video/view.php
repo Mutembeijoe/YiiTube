@@ -5,6 +5,7 @@
 /** @var $this \yii\web\View */
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\widgets\Pjax;
 
 ?>
@@ -34,16 +35,20 @@ use yii\widgets\Pjax;
     <div class="col-md-4">
         <?php foreach ($similarVideos as $similarVideo): ?>
             <div class="media mb-3">
-                <div class="embed-responsive embed-responsive-16by9 mr-2" style="width: 120px">
-                    <video class="embed-responsive-item" poster="<?php echo $similarVideo->getThumbnailLink() ?>"
-                           src="<?php echo $similarVideo->getVideoLink() ?>"
-                    >
-                    </video>
-                </div>
+                <a href="<?php echo Url::to(['video/view', 'id' => $similarVideo->video_id]) ?>">
+                    <div class="embed-responsive embed-responsive-16by9 mr-2" style="width: 150px">
+                        <video class="embed-responsive-item" poster="<?php echo $similarVideo->getThumbnailLink() ?>"
+                               src="<?php echo $similarVideo->getVideoLink() ?>"
+                        >
+                        </video>
+                    </div>
+                </a>
+
                 <div class="media-body">
-                    <h6 class="mt-0"><?= $similarVideo->title ?></h6>
+                    <h6 class="my-0 "><?= $similarVideo->title ?></h6>
                     <div class="text-muted">
-                        <p class="mt-0"> <?php echo \common\helpers\Html::channelLink($similarVideo->createdBy->username)  . ' 🔸 '. Yii::$app->formatter->asRelativeTime($similarVideo->created_at) ?> </p>
+                        <div class="m-0"><?php echo \common\helpers\Html::channelLink($similarVideo->createdBy->username) ?></div>
+                        <small class="m-0"> <?php echo $similarVideo->getViews()->count() . ' 🔸 ' . Yii::$app->formatter->asRelativeTime($similarVideo->created_at) ?> </small>
                     </div>
                 </div>
             </div>
